@@ -17,4 +17,16 @@ public class TestHelper {
 
         return new Bond(bondName, maturityDate, couponRate, couponDate1, couponDate2, booksClosedDate1, booksClosedDate2);
     }
+
+    public static Bond R2032Bond() {
+        String bondName = "R2032";
+        LocalDate maturityDate = LocalDate.parse("2032-03-31");
+        Float couponRate = 8.25f;
+        MonthDay couponDate1 = MonthDay.parse("--03-31");
+        MonthDay couponDate2 = MonthDay.parse("--09-30");
+        MonthDay booksClosedDate1 = MonthDay.parse("--03-21");
+        MonthDay booksClosedDate2 = MonthDay.parse("--09-20");
+
+        return new Bond(bondName, maturityDate, couponRate, couponDate1, couponDate2, booksClosedDate1, booksClosedDate2);
+    }
 }

@@ -9,10 +9,8 @@ import java.util.*;
 
 public class DateUtils {
 
-    public static HashMap<String, LocalDate> getLastAndNextCpnDates(Bond bond, LocalDate settlementDate) {
+    public static HashMap<String, LocalDate> getLastAndNextCpnDates(MonthDay cpnDate1, MonthDay cpnDate2, LocalDate settlementDate) {
         int settlementYear = settlementDate.getYear();
-        MonthDay cpnDate1 = bond.getCouponDate1();
-        MonthDay cpnDate2 = bond.getCouponDate2();
 
         List<LocalDate> dateChoices = new ArrayList<>();
 
@@ -57,12 +55,12 @@ public class DateUtils {
         return couponDates;
     }
 
-    public static LocalDate getBooksClosedDate(Bond bond, LocalDate lastCouponDate, LocalDate nextCouponDate) {
+    public static LocalDate getBooksClosedDate(MonthDay booksClosedDate1, MonthDay booksClosedDate2, LocalDate lastCouponDate, LocalDate nextCouponDate) {
         List<LocalDate> dateOptions = new ArrayList<>();
-        dateOptions.add(bond.getBooksClosedDate1().atYear(lastCouponDate.getYear()));
-        dateOptions.add(bond.getBooksClosedDate1().atYear(nextCouponDate.getYear()));
-        dateOptions.add(bond.getBooksClosedDate2().atYear(lastCouponDate.getYear()));
-        dateOptions.add(bond.getBooksClosedDate2().atYear(nextCouponDate.getYear()));
+        dateOptions.add(booksClosedDate1.atYear(lastCouponDate.getYear()));
+        dateOptions.add(booksClosedDate1.atYear(nextCouponDate.getYear()));
+        dateOptions.add(booksClosedDate2.atYear(lastCouponDate.getYear()));
+        dateOptions.add(booksClosedDate2.atYear(nextCouponDate.getYear()));
 
         LocalDate booksClosedDate = LocalDate.MIN;
         for (LocalDate bcDate : dateOptions) {
@@ -75,12 +73,22 @@ public class DateUtils {
         return booksClosedDate;
     }
 
-    public static double getRemainingCouponDates(Bond bond, LocalDate nextCouponDate) {
-        return Math.floor(ChronoUnit.DAYS.between(nextCouponDate, bond.getMaturityDate())/(365.25/2));
+    public static double getRemainingCouponDates(LocalDate maturityDate, LocalDate nextCouponDate) {
+        return MathUtils.round(ChronoUnit.DAYS.between(nextCouponDate, maturityDate)/(365.25/2), 0);
     }
 
     public static boolean isCumInterest(LocalDate settlementDate, LocalDate booksClosedDate) {
         return settlementDate.isBefore(booksClosedDate);
+    }
+
+    public static int getDaysAcc(LocalDate settlementDate, LocalDate lastCouponDate, LocalDate nextCouponDate, boolean isCumInterest) {
+//        TODO: test when S coincides with one of the coupon payment dates
+        if (isCumInterest) {
+           return (int)ChronoUnit.DAYS.between(lastCouponDate, settlementDate);
+        }
+        else {
+            return (int)ChronoUnit.DAYS.between(nextCouponDate, settlementDate);
+        }
     }
 
     public static boolean dateInRange(LocalDate d, LocalDate a, LocalDate b, boolean isInclusive) {
@@ -93,16 +101,44 @@ public class DateUtils {
         }
     }
 
-    public static void main(String[] args) {
-        String bondName = "R186";
-        LocalDate maturityDate = LocalDate.parse("2026-12-21");
-        Float couponRate = 10.5f;
-        MonthDay couponDate1 = MonthDay.parse("--06-21");
-        MonthDay couponDate2 = MonthDay.parse("--12-21");
-        MonthDay booksClosedDate1 = MonthDay.parse("--06-11");
-        MonthDay booksClosedDate2 = MonthDay.parse("--12-11");
-        Bond bond = new Bond(bondName, maturityDate, couponRate, couponDate1, couponDate2, booksClosedDate1, booksClosedDate2);
-
+    public static double getBrokenPeriod(LocalDate nextCouponDate, LocalDate settlementDate, LocalDate lastCouponDate, LocalDate maturityDate) {
+        if (!nextCouponDate.equals(maturityDate)) {
+            return (double)ChronoUnit.DAYS.between(settlementDate, nextCouponDate) / (double) ChronoUnit.DAYS.between(lastCouponDate, nextCouponDate);
+        }
+        else {
+            return (double)ChronoUnit.DAYS.between(settlementDate, nextCouponDate) / (365d/2d);
+        }
     }
+
+//    public static void main(String[] args) {
+////        String bondName = "R2032";
+////        LocalDate maturityDate = LocalDate.parse("2032-03-31");
+////        Float couponRate = 8.25f;
+////        MonthDay couponDate1 = MonthDay.parse("--03-31");
+////        MonthDay couponDate2 = MonthDay.parse("--09-30");
+////        MonthDay booksClosedDate1 = MonthDay.parse("--03-21");
+////        MonthDay booksClosedDate2 = MonthDay.parse("--09-20");
+////
+////        LocalDate settlementDate = LocalDate.parse("2024-05-16");
+////        LocalDate lastCouponDate = couponDate1.atYear(2024);
+////        LocalDate nextCouponDate = couponDate2.atYear(2024);
+////        LocalDate booksClosedDate = booksClosedDate2.atYear(2024);
+//
+//
+//        String bondName = "R186";
+//        LocalDate maturityDate = LocalDate.parse("2026-12-21");
+//        Float couponRate = 10.5f;
+//        MonthDay couponDate1 = MonthDay.parse("--06-21");
+//        MonthDay couponDate2 = MonthDay.parse("--12-21");
+//        MonthDay booksClosedDate1 = MonthDay.parse("--06-11");
+//        MonthDay booksClosedDate2 = MonthDay.parse("--12-11");
+//
+//        LocalDate settlementDate = LocalDate.parse("2017-02-07");
+//        LocalDate lastCouponDate = couponDate2.atYear(2016);
+//        LocalDate nextCouponDate = couponDate1.atYear(2017);
+//        LocalDate booksClosedDate = booksClosedDate1.atYear(2017);
+//
+//        System.out.println(getRemainingCouponDates(maturityDate, nextCouponDate));
+//    }
 
 }

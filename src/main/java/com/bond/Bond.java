@@ -6,7 +6,7 @@ import java.time.MonthDay;
 public class Bond {
     private final String bondName;
     private final LocalDate maturityDate;
-    private final Float couponRate;
+    private final float couponRate;
     private final MonthDay couponDate1;
     private final MonthDay couponDate2;
     private final MonthDay booksClosedDate1;
@@ -36,7 +36,7 @@ public class Bond {
         return this.maturityDate;
     }
 
-    public Float getCouponRate() {
+    public float getCouponRate() {
         return this.couponRate;
     }
 
