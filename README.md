@@ -6,7 +6,7 @@
 
 ## Part I (South African Bond Calculator)
 
-> **Submission date**: 2024/06/30
+> **Submission date**: 2024/05/30
 
 An operational and accurate price calculator for South African bonds was developed in Java for Part I of this assignment. The Java files corresponding to Part I are highlighted in the file diagram below.
 
@@ -63,7 +63,7 @@ Finding the $LCD$ and $NCD$ values is an iterative process with $O(n)$ therefore
 
 ### Data Structure Overview:
 
-This section will briefly describe the more important data structures used in the bond calculator.
+This section will briefly outline the more important data structures used in the bond calculator.
 
 `Bond`:
  
