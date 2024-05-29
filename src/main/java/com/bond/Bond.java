@@ -14,7 +14,7 @@ public class Bond {
 
     public Bond(String bondName,
                 LocalDate maturityDate,
-                Float couponRate,
+                float couponRate,
                 MonthDay couponDate1,
                 MonthDay couponDate2,
                 MonthDay booksClosedDate1,

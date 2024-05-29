@@ -10,15 +10,14 @@ import java.util.*;
 public class BondCalculator {
 
     private final Bond bond;
-    private LocalDate settlementDate;
-    private double yield;
+    private final LocalDate settlementDate;
+    private final double yield;
     private final HashMap<String, LocalDate> lastAndNextCouponDates;
     private final LocalDate booksClosedDate;
 
 
     public BondCalculator(Bond bond, LocalDate settlementDate, double yield) {
         this.bond = bond;
-//        Ensure entered settlement date is before bond maturity date
         if (settlementDate.isAfter(bond.getMaturityDate())) {
             throw new IllegalArgumentException("Settlement date is after maturity date");
         }
@@ -36,16 +35,8 @@ public class BondCalculator {
         return this.settlementDate;
     }
 
-    public void setSettlementDate(LocalDate settlementDate) {
-        this.settlementDate = settlementDate;
-    }
-
     public double getYield() {
         return this.yield;
-    }
-
-    public void setYield(float yield) {
-        this.yield = yield;
     }
 
     public LocalDate getLastCouponDate() {
