@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BondCalculatorTest {
+class R186Tests {
 
     Bond bond = TestHelper.R186Bond();
     LocalDate settlementDate = LocalDate.parse("2017-02-07");
