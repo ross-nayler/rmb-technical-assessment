@@ -1,10 +1,12 @@
 # RMB Algorithmic Trading Quant Developer Technical Assessment
 
-**Applicant**: Ross Nayler
+> **Applicant**: Ross Nayler
 
 *This document serves to explain the solution approach, efficiency mechanisms and data structures used in the completion of this assignment.*
 
 ## Part I (South African Bond Calculator)
+
+> **Submission date**: 2024/06/30
 
 An operational and accurate price calculator for South African bonds was developed in Java for Part I of this assignment. The Java files corresponding to Part I are highlighted in the file diagram below.
 
@@ -37,9 +39,11 @@ src
 
 ```
 
-### Solution Approach, Data Structures and Efficiency Mechanisms:
+### Solution Approach and Efficiency Mechanisms:
 
-A typical object-oriented approach was taken to develop the bond calculator. The bond calculator itself is represented by a class (`BondCalculator`) which takes three parameters when it is initialised; the parameters are: a bond object  containing all of the economics for a given bond, a settlement date, and a yield. The bond object is of `Bond` type (explained below), the settlement date is a `java.time.LocalDate` object and the yield is a `float`.
+> A typical object-oriented approach was taken to develop the bond calculator.
+
+The bond calculator itself is represented by a class (`BondCalculator`) which takes three parameters when it is initialised; the parameters are: a bond object  containing all of the economics for a given bond, a settlement date, and a yield. The bond object is of `Bond` type (explained below), the settlement date is a `java.time.LocalDate` object and the yield is a `float`.
 
 The `BondCalculator` performs price calculations via a variety of methods. For this assignment, the three most important methods are `getAccruedInterest`, `getAllInPrice` and `getCleanPrice`. There are also various other methods that involve the calculation of intermediate values used for validation and testing purposes.
 
@@ -57,9 +61,33 @@ An efficiency mechanism that is used that is worth noting is the way that the la
 
 Finding the $LCD$ and $NCD$ values is an iterative process with $O(n)$ therefore reducing the number of possibilities would increase the efficiency of the process. In order to do this, a check was put in place to see if the settlement date was before or after 1 July of the specified year. If the settlement date was before 1 July, only the previous year and current year would be appended to the coupon dates. If it was after 1 July, only the current year and the next year would be appended to the coupon dates. Both are calculated within a single pass and are returned in a `HashMap`.
 
+### Data Structure Overview:
+
+This section will briefly describe the more important data structures used in the bond calculator.
+
+`Bond`:
+ 
+    bondName: string
+    maturityDate: LocalDate
+    couponRate: float 
+    couponDate1: java.time.MonthDay
+    couponDate2: java.time.MonthDay
+    booksClosedDate1: java.time.MonthDay
+    booksClosedDate2: java.time.MonthDay
+
+`BondCalculator`:
+
+    bond: Bond
+    maturityDate: LocalDate
+    settlementDate: java.time.LocalDate 
+    yield: double
+    lastAndNextCouponDates: HashMap<String, LocalDate>
+    booksClosedDate: java.time.LocalDate
+
+
 ### Testing:
 
-*Testing was used thoroughly throughout the development of the bond calculator as test-driven-development was the development strategy of choice.*
+> Testing was used thoroughly throughout the development of the bond calculator as test-driven-development was the development strategy of choice.
 
 As specified in the assignment requirements document, the R186 and R2032 bonds were used to test the accuracy of the calculator. The correct values for the accrued interest (`ACCRINT`), all-in price (`AIP`) and clean price (`CP`) were obtained from the [JSE Bond Calculator](https://bondcalculator.jse.co.za/BondSingle.aspx?calc=Spot) with the given bonds, settlement dates and yields.
 
