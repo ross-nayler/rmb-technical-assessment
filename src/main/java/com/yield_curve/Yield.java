@@ -46,9 +46,4 @@ public class Yield {
     public String toString() {
         return this.date + ": {Num Days: " + this.numDays + "; Bid Yield: " + this.bidRate + "; Ask Yield: " + this.askRate + "}";
     }
-
-    public static void main(String[] args) {
-        Yield yield = new Yield(LocalDate.now(), 4.50f, 4.55f);
-        System.out.println(yield);
-    }
 }
