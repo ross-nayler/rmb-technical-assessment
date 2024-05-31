@@ -5,7 +5,7 @@ import com.bond.Bond;
 import java.time.LocalDate;
 import java.time.MonthDay;
 
-public class TestHelper {
+public class BondCalculatorTestHelper {
     public static Bond R186Bond() {
         String bondName = "R186";
         LocalDate maturityDate = LocalDate.parse("2026-12-21");

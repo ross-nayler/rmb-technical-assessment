@@ -1,8 +1,8 @@
 package com.bond_calculator;
 
 import com.bond.Bond;
-import com.helper.TestHelper;
-import com.utils.MathUtils;
+import com.helper.BondCalculatorTestHelper;
+import com.bond_utils.MathUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class R186ExInterestTests {
 
-    Bond bond = TestHelper.R186Bond();
+    Bond bond = BondCalculatorTestHelper.R186Bond();
     LocalDate settlementDate = LocalDate.parse("2026-12-12");
     double yield = 8.75d;
     BondCalculator bondCalculator = new BondCalculator(bond, settlementDate, yield);

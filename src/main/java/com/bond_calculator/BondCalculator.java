@@ -1,8 +1,8 @@
 package com.bond_calculator;
 
 import com.bond.Bond;
-import com.utils.DateUtils;
-import com.utils.MathUtils;
+import com.bond_utils.DateUtils;
+import com.bond_utils.MathUtils;
 
 import java.time.LocalDate;
 import java.util.*;
