@@ -4,12 +4,13 @@ import com.bond_utils.MathUtils;
 import com.curve_utils.Utils;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class Curve extends TreeMap<LocalDate, Yield> {
 
-    public void putDateYield(Yield yield) {
+    public void putYield(Yield yield) {
         super.put(yield.getDate(), yield);
     }
 

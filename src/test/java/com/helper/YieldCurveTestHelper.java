@@ -21,15 +21,15 @@ public class YieldCurveTestHelper {
         Curve curve = new Curve();
 
 //        Add Yields to Curve in incorrect order
-        curve.putDateYield(yield8);
-        curve.putDateYield(yield3);
-        curve.putDateYield(yield9);
-        curve.putDateYield(yield4);
-        curve.putDateYield(yield2);
-        curve.putDateYield(yield5);
-        curve.putDateYield(yield1);
-        curve.putDateYield(yield7);
-        curve.putDateYield(yield6);
+        curve.putYield(yield8);
+        curve.putYield(yield3);
+        curve.putYield(yield9);
+        curve.putYield(yield4);
+        curve.putYield(yield2);
+        curve.putYield(yield5);
+        curve.putYield(yield1);
+        curve.putYield(yield7);
+        curve.putYield(yield6);
 
 //        Add day counts to Yield objects within Curve
         curve.addDayCount();

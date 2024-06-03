@@ -1,5 +1,9 @@
 # RMB Algorithmic Trading Quant Developer Technical Assessment
 
+<p align="center">
+  <img src="assets/new_logo.jpg" alt="RMB"/>
+</p>
+
 > **Applicant**: Ross Nayler
 
 *This document serves to explain the solution approach, efficiency mechanisms and data structures used in the completion of this assignment.*
@@ -108,3 +112,63 @@ A standard testing regime was developed to align with the selected test-driven-d
 This testing strategy allowed for more efficient development as all intermediate values were also validated in the process. This made the debugging process much faster.
 
 Unit tests were executed for the R186 and R2032 bonds under the given conditions. All test were passed and results were as expected. Further tests were executed on the R186 bond in order to test features of the calculator that were not tested under the conditions given in the assignment. The first additional test was to ensure that when the bond has less than 6 months to maturity it is priced as a money market instrument, therefore a settlement date within 6 months of the maturity date was selected and the test was executed again. All tests were passed and results were as expected. The second additional test was executed to test the scenario when the settlement date is after the books-closed date *i.e., when a bond is ex interest*. Once again, all tests were passed and results were as expected.
+
+## Part II (Yield Curve)
+
+> **Submission date**: 2024/06/03
+
+A custom data structure was developed to represent a yield curve in Part II of this assignment. The Java files corresponding to Part II of this assignment are highlighted in the file diagram shown below.
+
+### Java File Structure:
+
+```
+src
+└───main
+│   └───java
+|       └───com
+|           └───curve_utils
+|           |   Utils.java
+|           └───yield_curve
+|           |   Curve.java
+|           |   Rate.java
+|           |   Yield.java
+|           └───...
+└───test
+    └───java
+        └───com
+            └───yield_curve
+            |   YieldCurveTestHelper.java
+            └───helper
+            |   YieldCurveTestHelper.java
+            └───...
+
+```
+
+### Solution Approach, Efficiency Mechanisms and Data Structure Overview:
+
+The implementation of the yield curve is dependent on three custom Java classes: 1) `Yield`, a custom class that represents bond instrument yields, 2) `Rate`, an Enum used to instantiate Bid, Mid, or Ask rates and 3) `Curve`, a custom class that represents the yield curve itself.
+
+#### `Yield`:
+
+`Yield` is designed to represent the bid and ask rates of a bond object at a specific time, and is therefore parameterised with a maturity date (`java.time.LocalDate`), as well as bid and ask rates (`float`). The class contains various getter methods for all of the mentioned parameters, as well as a `getMidRate` method which returns the mid rate of an object defined by $\frac{\text{bid rate} + \text{ask rate}}{2}$. The `Yield` class also contians a setter method called `setNumDays` which allows for the creation of the day index for the yield object. `setNumDays` takes another date (in this case it is the most recent date in the yield curve) as a paramater and sets the day index as the number of calendar days between the instantiated maturity date and the inputted date.
+
+#### `Curve`:
+
+The yield curve itself is represented by the `Curve` class. `Curve` is a custom data structure that extends Java's native Tree Map implementation (`java.util.TreeMap`). `Curve` does not take any parameters, and it is indexed by bond maturity date (`java.time.LocalDate`). The custom methods that `Curve` implements are: 1) `putYield` which simply adds a `Yield` object to the curve without having to specify a key; 2) `addDayCount` which enriches all of the `Yield` objects within the curve with a day count by recursively calling the `setNumDays` method on each `Yield`; and 3) `getRate` which accepts a date and a rate type as parameters and returns the rate as specified in the assignment brief. The `getRate` method will be further explained later in this document.
+
+As mentioned above, `Curve` extends Java's native `TreeMap` implementation which itself is an implementation of a self-balancing binary search tree (BST). Put simply, a BST is a hierarchical data structure used for storing data in a sorted manner where every node in the left subtree is less than the parent node, and every node in the right subtree is greater than the parent node. A simple example of a BST is shown below.
+
+<p align="center">
+  <img src="assets/BST.png" alt="self-balancing binary search tree"/>
+</p>
+
+The insertion and retrieval complexity of a `TreeMap` is $O(\log{n})$, which is not as efficient as other map implementations such as `HashMap` which has $O(1)$ retrieval and insertion complexity. The `TreeMap` does, however, have two characteristics which are extremely useful in the creation of a yield curve; it is 1) navigable and 2) sorted. `TreeMap` implements the `NavigableMap` interface which offers extremely useful methods such as `lower(e)` and `higher(e)` that are essential to the `Curve.getRate` method (`lower(e)` and `higher(e)` return the greatest element strictly lower than query parameter `e` and *visa-versa*, and are also $O(\log{n})$). `TreeMap` also implements the `SortedMap` interface which ensures that entries are always stored in the correct order **no matter** the order of insertion (the keys, or maturity dates in this case, are used for ordering). This characteristic allows for iteration through the `TreeMap` to follow the same order of the keys much faster than a `HashMap` (which will typically have a sorting complexity of $O(n\log{n})$). It is also very important to mention that both `TreeMap` and (through inheritance) `Curve` are not thread-safe, but have been selected given the aforementioned benefits that are optimal given the nature of this assignment. If this solution was to be implemented in a concurrent environment, it is recommended that a `ConcurrentSkipListMap` be used because it is more efficient in a concurrent environment.
+
+#### `getRate()`:
+
+Now that the `Curve` data structure has been described, the methodology of the `getRate()` method can be explained. As specified in the assignment brief, the `getRate()` method should return either the bid, ask, or mid rate when provided with a date; the `getRate()` method therefore takes a query date and a rate type as parameters. A basic outline of the methodology of the `getRate()` method is as follows:
+
+- If the query date is earlier than the earliest maturity date that the `Curve` was instantiated with, then an `IllegalArgumentException` is thrown.
+- If the query date is later than the last maturity date that the `Curve` was instantiated with, then the required rate is flat-extrapolated from the latest avaliable rate.
+- If the query date matches one of the maturity dates that the `Curve` was instantiated with, then the required rate is simply retrieved and returned as a `double`.
+- If the query date does not match, but is within the range of maturity dates that the `Curve` was instantiated with, then the required rate is linearly interpolated piece-wise and returned as a double. In this case, rates are interpolated with the following formula $\text{Yield}_{n, r} = \text{Yield}_{n-1, r} \cdot \frac{(\text{Yield}_{n+1, r} - \text{Yield}_{n-1, r}) (\text{Days}_{n} - \text{Days}_{n-1})}{(\text{Days}_{n+1} - \text{Days}_{n-1})}$, where $\text{Yield}_{n, r}$ is the bond yield at query date $n$ with rate type $r$, and $\text{Days}_{n}$ is the number of days that have passed from a common base date at query date $n$. It is important to note that in this case $(n-1)$ and $(n+1)$ refer to the last and next avaliable dates within the `Curve` when compared to the query date.
