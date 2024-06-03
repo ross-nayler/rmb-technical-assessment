@@ -146,7 +146,7 @@ src
 
 ### Solution Approach, Efficiency Mechanisms and Data Structure Overview:
 
-The implementation of the yield curve is dependent on three custom Java classes: 1) `Yield`, a custom class that represents bond instrument yields, 2) `Rate`, an Enum used to instantiate Bid, Mid, or Ask rates and 3) `Curve`, a custom class that represents the yield curve itself.
+> The implementation of the yield curve is dependent on three custom Java classes: 1) `Yield`, a custom class that represents bond instrument yields, 2) `Rate`, an Enum used to instantiate Bid, Mid, or Ask rates and 3) `Curve`, a custom class that represents the yield curve itself.
 
 #### `Yield`:
 
@@ -177,7 +177,7 @@ This methodology, along with the selected data structure allowed for the most ef
 
 ### Testing:
 
-Once again, test driven development was used in the creation of the `Curve` data structure. The tags received upon the passing of the unit tests are shown below to give an overview of the testing process.
+> Once again, test driven development was used in the creation of the `Curve` data structure. The tags received upon the passing of the unit tests are shown below to give an overview of the testing process.
 
 - Bonds are correctly ordered in curve after out-of-order insertion
 - Correct day indices are added to bonds
