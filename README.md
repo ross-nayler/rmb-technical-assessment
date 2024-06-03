@@ -171,4 +171,13 @@ Now that the `Curve` data structure has been described, the methodology of the `
 - If the query date is earlier than the earliest maturity date that the `Curve` was instantiated with, then an `IllegalArgumentException` is thrown.
 - If the query date is later than the last maturity date that the `Curve` was instantiated with, then the required rate is flat-extrapolated from the latest avaliable rate.
 - If the query date matches one of the maturity dates that the `Curve` was instantiated with, then the required rate is simply retrieved and returned as a `double`.
-- If the query date does not match, but is within the range of maturity dates that the `Curve` was instantiated with, then the required rate is linearly interpolated piece-wise and returned as a double. In this case, rates are interpolated with: $$\text{Yield}_{n, r} = \text{Yield}_{n-1, r} \cdot \frac{(\text{Yield}_{n+1, r} - \text{Yield}_{n-1, r}) (\text{Days}_{n} - \text{Days}_{n-1})}{(\text{Days}_{n+1} - \text{Days}_{n-1})}$$ where $\text{Yield}_{n, r}$ is the bond yield at query date $n$ with rate type $r$, and $\text{Days}_{n}$ is the number of days that have passed from a common base date at query date $n$. It is important to note that in this case $(n-1)$ and $(n+1)$ refer to the last and next avaliable dates within the `Curve` when compared to the query date.
+- If the query date does not match, but is within the range of maturity dates that the `Curve` was instantiated with, then the required rate is linearly interpolated piece-wise and returned as a double. In this case, rates are interpolated with:
+$$
+\text{Yield}_{n, r}
+=
+\text{Yield}_{n-1, r}
+\cdot
+\frac{(\text{Yield}_{n+1, r} - \text{Yield}_{n-1, r}) (\text{Days}_{n} - \text{Days}_{n-1})}{(\text{Days}_{n+1} - \text{Days}_{n-1})}$$
+where
+$\text{Yield}_{n, r}$
+is the bond yield at query date $n$ with rate type $r$, and $\text{Days}_{n}$ is the number of days that have passed from a common base date at query date $n$. It is important to note that in this case $(n-1)$ and $(n+1)$ refer to the last and next avaliable dates within the `Curve` when compared to the query date.
